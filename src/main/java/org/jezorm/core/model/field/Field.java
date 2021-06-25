@@ -48,7 +48,7 @@ public class Field implements InterFaceField {
     public Boolean primary_key = false;
 
     /**
-     * If True, this field is the primary key for the model.
+     * A human-readable name for the field.
      */
     public String verbose_name = "";
 
