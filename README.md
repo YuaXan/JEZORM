@@ -205,7 +205,7 @@ public class App {
 >>    Boolean primary_key = false;
 >>
 >>    /**
->>     * If True, this field is the primary key for the model.
+>>     * A human-readable name for the field.
 >>     */
 >>    String verbose_name = "";
 >>```
