@@ -1,0 +1,6 @@
+*target/
+*.class
+*.jar
+*.settings/
+*.imls
+!examples/jezormtest/lib/jezorm-1.0.jar
