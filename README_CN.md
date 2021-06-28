@@ -1,13 +1,14 @@
 # JEZORM
-`JEZORM's` full name is `Java Easy Object Relational Mapping`. The design concept from [Django](https://www.djangoproject.com/). Because the traditional way was to write `DAO` for every DataBase Table. The `JEZORM` does not to write `DAO` for every table, just like [Django](https://www.djangoproject.com/), you should write `data models` and then `JEZORM` will scan all `data models` to auto-create DataBase Table.
+
+`JEZORM` 的全称是 `Java Easy Object Relational Mapping`。 设计灵感来源于 [Django](https://www.djangoproject.com/)。 在之前的开发方式是为每一个数据表写一个`DAO`，但是 `JEZORM` 不需要为每一个表写 `DAO`，就像 [Django](https://www.djangoproject.com/), 你只需要写一份数据模型之后`JEZORM`会为你自动生成数据表。
 
 ---
 
-[中文文档](README_CN.md)点此
+[English](README.md) click it.
 
 ---
 
-### Examples Porject Directories Overview
+### 示例目录
 ```
 .
 ├── lib
@@ -22,9 +23,9 @@
 ```
 
 ---
-## Quick start guide
+## 快速开始教程
 
-### For Model Example
+### 模型示例
 ```java
 package com.studentsystem.student;
 
@@ -54,28 +55,28 @@ public class StudentModel {
     }
 }
 ```
-At this point, we write 2 models about the student. After we should make a `Settings` Class, the `Settings` Class have some information for `JEZORM`.
+我们写了两个关于学生数据模型，之后我们只需要在`Settings`类保存我们有关模型的信息。
 
 ---
 
-### For Settings Example
+### Settings 示例
 ```java
 package com.studentsystem;
 
 import org.jezorm.core.controller.Setting;
 
 public class Settings extends Setting {
-	public final String PORJECT_NAME = "com.studentsystem"; // your porject name
-	public final String[] INSTALL_APP = { "student" }; // your App name 
-	public final String DB_PATH = "studensystem.db"; // your DataBase Path
+	public final String PORJECT_NAME = "com.studentsystem"; // 你的项目名
+	public final String[] INSTALL_APP = { "student" }; // APP名
+	public final String DB_PATH = "studensystem.db"; // 数据库地址
 
 }
 ```
-`JEZORM` temporary only support [SQLite3](https://sqlite.org/index.html), so just need the DataBase file name.
+`JEZORM` 暂时只支持 [SQLite3](https://sqlite.org/index.html)，所以我们只需要数据库文件名即可。
 
 ---
 
-### For Main Example
+### 程序入口示例
 ```java
 package com.studentsystem;
 
@@ -85,17 +86,17 @@ import org.jezorm.core.controller.SettingSingleton;
 public class App {
     public static void main(String[] args) throws Exception {
         
-        SettingSingleton.setSettingsClass(Settings.class); // add the Setting.class 
-        new DataBase(); // init DataBase
-        DataBase.createDbTable(DataBase.getModelSQL()); // create all table for models
+        SettingSingleton.setSettingsClass(Settings.class); // 添加 Settings 类
+        new DataBase(); // 初始化数据库模块
+        DataBase.createDbTable(DataBase.getModelSQL()); // 创建数据表
     }
 }
 ```
 
 ---
 
-### For CURD Example
-We can write CURD examples in Main.
+### 增删改查示例
+我们可以将增删改查示例写入程序入口内。
 ```java
 package com.studentsystem;
 
@@ -139,8 +140,8 @@ public class App {
 
     public static void retrieve() {
         StudentModel.Student stu = new StudentModel.Student();
-        ArrayList<? extends Model> objList1 = stu.get("account", "yuaxan"); // first way
-        ArrayList<? extends Model> objList2 = stu.get(Map.of("account", "yuaxan")); // second way
+        ArrayList<? extends Model> objList1 = stu.get("account", "yuaxan"); // 第一种方法
+        ArrayList<? extends Model> objList2 = stu.get(Map.of("account", "yuaxan")); // 第二种方法
         StudentModel.Student obj1 = (StudentModel.Student) objList1.get(0);
         StudentModel.Student obj2 = (StudentModel.Student) objList2.get(0);
         System.out.println("Print first way first name:" + obj1.firstName.value);
@@ -151,11 +152,10 @@ public class App {
     public static void delete(String id) {
         StudentModel.Student stu = new StudentModel.Student();
 
-        // first way will successful delete
+        // 第一种方法可以将数据删除
         System.out.println("Print first way whether save:" + stu.delete("account", "yuaxan"));
 
-        // second way will fail, because first way delete data, but this way can delete
-        // too
+        // 第二种方法会失败，因为第一种方法已经删除了，但第二种方法也是有效的。
         System.out.println("Print second way whether save:" + stu.delete(Map.of("account", "yuaxan")));
     }
 }
@@ -164,52 +164,51 @@ public class App {
 
 ---
 
-## Field Type
+## 字段类型
 >**Field(Map<String, Object> agrs)**
 >
->All types of fields extend in this class, and you can require some arguments to field.
+>所有字段类都是继承这个类，同时你可以传入一些参数
 >
->>You can require following arguments.
+>>参数如下：
 >>```java
 >>    /**
->>     * if true, Field will store empty values as null in the database.
->>     * Default is false.
+>>     * 如果是true，该字段在数据库中值可以填null
+>>     * 默认false
 >>     */
 >>    Boolean none = false;
 >>
 >>    /**
->>     * If true, the field is allowed to be blank. Default is false.
+>>     * 如果是true，该字段可以不输入值，默认false
 >>     */
 >>    Boolean blank = false;
 >>
 >>    /**
->>     * If false, the field will not be displayed. Default is true.
+>>     * 如果为false，该字段将不会显示，默认为true
 >>     */
 >>    Boolean editable = true;
 >>
 >>    /**
->>     * If true, a database index will be created for this field.
+>>     *如果为true，将会为该字段在数据库创建索引
 >>     */
 >>    Boolean db_index = false;
 >>
 >>    /**
->>     * If true, this field must be unique throughout the table.
+>>     * 如果为true，该字段将在数据表唯一
 >>     */
 >>    Boolean unique = false;
 >>
 >>    /**
->>     * The default value for the field. This can be a value or a callable object. If
->>     * callable it will be called every time a new object is created.
+>>     * 该字段的默认值，每次新创建数据时，字段为空则使用默认值
 >>     */
 >>    Object filed_default = null;
 >>
 >>    /**
->>     * If true, this field is the primary key for the model.
+>>     * 如果为true，该字段是数据表的主键
 >>     */
 >>    Boolean primary_key = false;
 >>
 >>    /**
->>     * A human-readable name for the field.
+>>     * 可读的字段名
 >>     */
 >>    String verbose_name = "";
 >>```
@@ -217,9 +216,9 @@ public class App {
 
 >**AutoField(Map<String, Object> agrs)**
 >
->>You just only requires `verbose_name`.
+>>你只能填写`verbose_name`.
 >>
->>An IntField that automatically increments according to available IDs. You usually won’t need to use this directly; a primary key field will automatically be added to your model if you don’t specify otherwise.
+>>基于 IntField 的可自增的ID字段。您通常不需要直接使用此：如果您没有指定其他操作，则将自动将AutoField字段添加到模型中。
 >>
 >>```java
 >>public AutoField id = new AutoField(Map.of());
@@ -228,31 +227,31 @@ public class App {
 
 >**IntField(Map<String, Object> agrs)**
 >
->>An integer. You can requires all arguments.
+>>一个整数字段. 你可以传入所有参数。
 
 >**CharField(Map<String, Object> agrs)**
 >
->>An string. You can requires all arguments.
+>>一个字符串字段. 你可以传入所有参数。
 
 >**BooleanField(Map<String, Object> agrs)**
 >
->>An boolean. You can requires all arguments.
+>>一个布尔值字段. 你可以传入所有参数。
 
 >**DateField(Map<String, Object> agrs)**
 >
->>An date. You can requires all arguments.
+>>一个日期字段. 你可以传入所有参数。
 >>
->>`Warning: Not test whit Date Class or Calendar Class`
+>>`警告: 没有使用 Date 类或者 Calendar 类进行测试`
 
 >**DateTimeField(Map<String, Object> agrs)**
 >
->>An datatime. You can requires all arguments.
+>>一个时间字段. 你可以传入所有参数。
 >>
->>`Warning: Not test whit Date Class or Calendar Class`
+>>`警告: 没有使用 Date 类或者 Calendar 类进行测试`
 
 >**ForeignKeyField(Map<String, Object> agrs)**
 >
->>A many-to-one relationship. Requires two necessary arguments: the class to which the model is related and the `ON_DELETE` option. And a optional arguments: if `ON_DELETE` choise `SET_DEFAULT`, need requires default value.
+>>外键字段。 需要两个必要的参数：与模型相关的类和`ON_DELETE` 选项。 还有一个可选参数：如果`ON_DELETE`选择`SET_DEFAULT`，需要默认值。
 >>
 >>```java
 >>public ForeignKeyField field = new ForeignKeyField(
@@ -260,27 +259,25 @@ public class App {
 >>```
 >>
 >
->>### Functions
+>>### 方法
 >>```java
 >>public ArrayList<? extends Model> getObject();
 >>```
->>This function will get objects about the span relationship.
+>>这个方法可以获取父键的所有数据。
 
 ---
 
 ## License
 
-Licensed under either of
+许可证如下
 
 - Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE))
 - MIT license ([LICENSE-MIT](LICENSE-MIT))
 
-at your option.
+随你选择。
 
 ---
 
 ### Contribution
 
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
-dual licensed as above, without any additional terms or conditions.
+如果您另有明确说明，否则根据 Apache-2.0 许可证的定义，包含在作品中的您提交的任何贡献均应获得上述双重许可，并且没有任何附加条款或条件。
